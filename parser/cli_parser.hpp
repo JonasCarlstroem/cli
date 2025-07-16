@@ -6,6 +6,7 @@
 #include <utils/string>
 #include <unordered_map>
 #include <vector>
+#include <logging/base>
 
 #if defined(_MSC_VER)
 #define NOINLINE __declspec(noinline)
@@ -19,11 +20,12 @@ auto npos = string::npos;
 
 namespace cli {
 
-NOINLINE class parser {
+class parser {
     std::unordered_map<string, option> options_;
     std::vector<argument> global_args_;
+    logging::logger* logger_;
 
-    NOINLINE const argument *
+    const argument *
     find_argument_definition(const string &option, const string &name) const {
         if (!option.empty()) {
             auto it = options_.find(option);
@@ -44,17 +46,17 @@ NOINLINE class parser {
     }
 
   public:
-    NOINLINE parser() {}
+    parser(logging::logger* logger) : logger_(logger) {}
 
-    NOINLINE void add_option(option opt) {
+    void add_option(option opt) {
         options_[opt.name()] = std::move(opt);
     }
 
-    NOINLINE void add_global_argument(argument arg) {
+    void add_global_argument(argument arg) {
         global_args_.emplace_back(std::move(arg));
     }
 
-    NOINLINE parse_result parse(int argc, char **argv) {
+    parse_result parse(int argc, char **argv) {
         parse_result result;
 
         bool found_option = false;
