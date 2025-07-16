@@ -29,7 +29,7 @@ class parse_result {
     }
 
     template <typename T, typename FieldPtr>
-    NOINLINE void assign_to_field(
+    void assign_to_field(
         T &instance, const string &cli_name, FieldPtr field_ptr
     ) const {
         if constexpr (std::is_same_v<
@@ -54,7 +54,7 @@ class parse_result {
     }
 
     template <typename T, typename Tuple>
-    NOINLINE void apply_bind(T &instance, const Tuple &fields) {
+    void apply_bind(T &instance, const Tuple &fields) {
         std::apply(
             [&](auto &&...pair) {
                 ((assign_to_field(instance, pair.first, pair.second)), ...);
@@ -103,7 +103,7 @@ class parse_result {
         return std::nullopt;
     }
 
-    template <typename T> NOINLINE T bind() {
+    template <typename T> T bind() {
         T instance{};
 
         apply_bind(instance, T::cli_fields());

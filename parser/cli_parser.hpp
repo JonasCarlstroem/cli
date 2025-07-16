@@ -3,7 +3,7 @@
 #include "cli_parse_result.hpp"
 #include <optional>
 #include <stdexcept>
-#include <string_utils>
+#include <utils/string>
 #include <unordered_map>
 #include <vector>
 
