@@ -7,3 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(parser INTERFACE)
 
 target_compile_features(parser INTERFACE cxx_std_17)
+
+install(TARGETS parser
+		EXPORT libTargets
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib
+		RUNTIME DESTINATION bin
+		INCLUDES DESTINATION include)
