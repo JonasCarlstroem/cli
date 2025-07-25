@@ -4,8 +4,8 @@
 #include <vector>
 
 // lib
-#include "cli_argument.hpp"
-#include "cli_macro.hpp"
+#include "argument.h"
+#include "macro.h"
 
 namespace cli {
 

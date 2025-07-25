@@ -26,42 +26,45 @@ class argument {
                 break;
             }
         } catch (...) {
-            throw std::runtime_error(
-                "Failed to parse value for argument: " + name()
-            );
+            throw std::runtime_error("Failed to parse value for argument: " + name());
         }
     }
 
   public:
     argument() = default;
+
     argument(
-        string name, optional_string alias = std::nullopt,
-        optional_string description = std::nullopt,
-        value_type default_value    = "",
-        argument_type arg_type      = argument_type::string
+        string name,
+        std::optional<std::string> alias       = std::nullopt,
+        std::optional<std::string> description = std::nullopt,
+        value_type default_value               = "",
+        argument_type arg_type                 = argument_type::string
     )
-        : name_(std::move(name)), alias_(std::move(alias)),
+        : name_(std::move(name)),
+          alias_(std::move(alias)),
           description_(std::move(description)),
-          default_value_(std::move(default_value)), type_(std::move(arg_type)) {
-    }
+          default_value_(std::move(default_value)),
+          type_(std::move(arg_type)) {}
 
     template <typename T>
     argument(
-        string name, optional_string alias = std::nullopt,
-        optional_string description = std::nullopt, T default_value = T(),
-        argument_type arg_type = argument_type::string
+        string name,
+        std::optional<std::string> alias = std::nullopt,
+        std::optional<std::string> description = std::nullopt,
+        T default_value             = T(),
+        argument_type arg_type      = argument_type::string
     )
-        : name_(std::move(name)), alias_(std::move(alias)),
+        : name_(std::move(name)),
+          alias_(std::move(alias)),
           description_(std::move(description)),
-          default_value_(std::move(default_value)), type_(std::move(arg_type)) {
-    }
+          default_value_(std::move(default_value)),
+          type_(std::move(arg_type)) {}
 
     void set_value(value_type v) { value_ = std::move(v); }
+
     void set_default(value_type v) { default_value_ = std::move(v); }
 
-    void set_value_from_string(const std::string& str) {
-        set_from_str<&argument::value_>(str);
-    }
+    void set_value_from_string(const std::string& str) { set_from_str<&argument::value_>(str); }
 
     void set_default_from_string(const string& str) {
         set_from_str<&argument::default_value_>(str);
@@ -70,21 +73,21 @@ class argument {
     bool was_provided() const { return value_.index() != 0; }
 
     template <typename T> std::optional<T> get_value() const {
-        if (auto pval = std::get_if<T>(&value_))
-            return *pval;
-        if (auto pval = std::get_if<T>(&default_value_))
-            return *pval;
+        if (auto pval = std::get_if<T>(&value_)) return *pval;
+        if (auto pval = std::get_if<T>(&default_value_)) return *pval;
         return std::nullopt;
     }
 
     const string& name() const { return name_; }
-    const optional_string& alias() const { return alias_; }
-    const optional_string& description() const { return description_; }
+
+    const std::optional<std::string>& alias() const { return alias_; }
+
+    const std::optional<std::string>& description() const { return description_; }
+
     argument_type type() const { return type_; }
 
     bool matches(const string& token) const {
-        return (!name_.empty() && name_ == token) ||
-               (alias_ && string(*alias_) == token);
+        return (!name_.empty() && name_ == token) || (alias_ && string(*alias_) == token);
     }
 
     argument clone_with_current_state() const {
@@ -110,9 +113,9 @@ class argument {
 
   private:
     string name_;
-    optional_string alias_;
-    optional_string description_;
-    argument_type type_{argument_type::string};
+    std::optional<std::string> alias_;
+    std::optional<std::string> description_;
+    argument_type type_ {argument_type::string};
     value_type default_value_;
     value_type value_;
 };

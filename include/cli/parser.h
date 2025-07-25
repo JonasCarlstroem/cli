@@ -6,10 +6,10 @@
 #include <vector>
 
 // lib
-#include <logging/logger>
-#include <utils/string>
-#include "cli_option.hpp"
-#include "cli_parse_result.hpp"
+#include <logging/logger.h>
+#include <utils/string.h>
+#include "option.h"
+#include "parse_result.h"
 
 #if defined(_MSC_VER)
 #define NOINLINE __declspec(noinline)
